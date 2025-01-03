@@ -38,13 +38,18 @@ def recommend():
         # Get user preferences from the request
         user_preferences = request.get_json()
 
+        print(user_preferences)
+
+        user_level = user_preferences['level'] 
+        user_skills = user_preferences['skills'] 
+
         # Validate user level
-        if user_preferences['Level'] not in encoder.categories_[0]:
-            return jsonify({"error": f"Unknown level: {user_preferences['Level']}. Known levels are: {encoder.categories_[0]}"})
+        if user_level not in encoder.categories_[0]:
+            return jsonify({"error": f"Unknown level: {user_level}. Known levels are: {encoder.categories_[0]}"})
 
         # Encode user preferences
-        user_level = encoder.transform(pd.DataFrame([[user_preferences['Level']]], columns=['Level']))
-        user_skills = tfidf.transform([user_preferences['Skills']])
+        user_level = encoder.transform(pd.DataFrame([[user_level]], columns=['Level']))
+        user_skills = tfidf.transform([user_skills])
         user_vector = np.hstack([user_level, user_skills.toarray()])
 
         # Encode course data
